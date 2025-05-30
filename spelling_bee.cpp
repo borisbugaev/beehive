@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		std::cout << "Enter Parameters: "
+		std::cout << "Enter Parameters: ";
 		std::cin >> kinput;
 	}
 
