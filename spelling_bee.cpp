@@ -4,7 +4,6 @@
 #include <string>
 #include <cstring>
 #include <string_view>
-#include <bitset>
 #include <chrono>
 
 /*
@@ -37,28 +36,33 @@ uint32_t map_key_char(char kc, uint32_t str_map)
 }
 
 /*
+Accomplishes mapping for map_char (below)
+Not super safe (does not verify valid input)
+*/
+uint32_t map_gen(char mc)
+{
+	return (ONE_BIT << (MAP_OFST - (uint32_t(mc) - ASC_OFST)));
+}
+
+/*
 Let each lowercase ascii letter be l where a=<l=<z
+Protects input integrity so that map generation only happens with valid char
 Each unique value l returns bitmap as ui32
 */
 uint32_t map_char(char wc)
 {
-	if (uint32_t(wc) < (ASC_OFST + ONE_BIT) ||
-		uint32_t(wc) > (ASC_OFST + MAP_OFST))
-		{
-			if (uint32_t(wc) >= uint32_t('A') ||
-				uint32_t(wc) <= uint32_t('Z'))
-				{
-					char kc{char(uint32_t(wc) + TO_LCASE)};
-					return map_key_char(kc, map_char(kc));
-				}
-			else
-			{
-				return 0;
-			}
-		}
-	else 
+	if (uint8_t(wc) <= (ASC_OFST + MAP_OFST) && uint8_t(wc) >= (ASC_OFST + ONE_BIT)) 
 	{
-		return (ONE_BIT << (MAP_OFST - (uint32_t(wc) - ASC_OFST)));
+		return map_gen(wc);
+	}
+	else if (uint8_t(wc) >= uint8_t('A') && uint8_t(wc) <= uint8_t('Z'))
+	{
+		char kc{char(uint32_t(wc) + TO_LCASE)};
+		return map_key_char(kc, map_gen(kc));
+	}
+	else
+	{
+		return 0;
 	}
 }
 
@@ -67,19 +71,15 @@ Creates bitmap for set of chars in str_v
 As str_v is a subset of the alphabet, the bitmap must >= 26 bits
 Uses ui32 type to contain the returned bitmap
 */
-uint32_t map_str(std::string_view str_v)
+
+uint32_t iter_map_str(std::string_view str_v)
 {
-	if (str_v.length() < 1)
+	uint32_t string_map{0};
+	for (int i = 0; i < str_v.length(); i++)
 	{
-		return 0;
+		string_map = string_map | map_char(str_v[i]);
 	}
-	else
-	{
-		const char chr{str_v[0]};
-		const uint32_t map_pref{map_char(str_v[0])};
-		str_v.remove_prefix(1);
-		return map_pref | map_str(str_v);
-	}
+	return string_map;
 }
 
 /*
@@ -115,8 +115,11 @@ int main(int argc, char* argv[])
 	}
 
 	auto start = std::chrono::steady_clock::now();
+	#ifdef ADV_TIMING
+	auto temp_start = std::chrono::steady_clock::now();
+	#endif
 	const std::string_view k_view{kinput};
-	const uint32_t k_map{map_str(k_view)};
+	const uint32_t k_map{iter_map_str(k_view)};
 	
 	std::ifstream file("word_list.txt");
 	if (!file.is_open())
@@ -126,20 +129,39 @@ int main(int argc, char* argv[])
 	}
 	std::ofstream out_file("valid_words.txt");
 	std::string line{};
+	#ifdef ADV_TIMING
+	long long sum_exec{0};
+	long long num_exec{0};
+	#endif
 	while (std::getline(file, line))
 	{
 		std::string_view candidate{line};
-		if (map_compare(k_map, map_str(candidate)) && candidate.length() > 3)
+		if (map_compare(k_map, iter_map_str(candidate)) && candidate.length() > 3)
 		{
-			out_file << candidate << '\n';
+			out_file << candidate << "\n";
 		}
+		#ifdef ADV_TIMING
+		auto call_complete = std::chrono::steady_clock::now();
+		sum_exec += std::chrono::duration_cast<std::chrono::nanoseconds>(call_complete - temp_start).count();
+		num_exec += 1;
+		temp_start = std::chrono::steady_clock::now();
+		#endif
 	}
 	file.close();
 	out_file.close();
 	
 	auto end = std::chrono::steady_clock::now();
-	std::cout << "Execution Time (post-input): ";
-	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " mus" << std::endl;
+	#ifdef ADV_TIMING
+	if (num_exec == 0)
+	{
+		num_exec = 1;
+	}
+	std::cout << "Average Time to Parse Single Word: " << sum_exec/num_exec << " ns\n";
+	std::cout << "Total Words: " << num_exec << std::endl;
+	std::cout << "Total Time spent evaluating words: " << sum_exec*0.001 << " mus\n";
+	#endif
+	std::cout << "Executed in ";
+	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
 	// 
 	return 0;
 }
