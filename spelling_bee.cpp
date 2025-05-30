@@ -10,11 +10,9 @@
 Program to solve "NYT Spelling Bee" word puzzle relatively fast
 There exists some issue that prevents execution in vscode
 However, everything seems to work outside the ide
-Current runtime ~50ms
+Current runtime ~30ms
 TODO:
 --fix vscode exec
---improve input (currently parameters are hardcoded which is stupid)
---dictionary pruning?
 --make it faster overall
 */
 
