@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	{
         std::cerr << "Error opening file." << std::endl;
         std::cerr << strerror(errno) << std::endl;
-    }
+	}
 	std::ofstream out_file("valid_words.txt");
 	std::string line{};
 	while (std::getline(file, line))
@@ -138,7 +138,8 @@ int main(int argc, char* argv[])
 	out_file.close();
 	
 	auto end = std::chrono::steady_clock::now();
-	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() << "ns" << std::endl;
+	std::cout << "Execution Time (post-input): ";
+	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " mus" << std::endl;
 	// 
 	return 0;
 }
