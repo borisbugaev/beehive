@@ -12,16 +12,16 @@ Why ...
 ... do I continue to let the knicks do this to me? Unclear. (5/31/2025 but likely this sentiment shall recur)
 
 ... bother?
-    Obviously, "telling the computer what you want to solve and letting it solve the problem for you"
-    is something which you could always *argue* is the case. Nevertheless, it feels to me as though
-    to have any satisfaction in "solving" a problem requires some level of (at minimum) algebra (in the 
-    most general sense) wherein I, the human, should be breaking down the problem somewhat on my own, the idea
-    being that a computer can solve problems faster if you give it problems which are closer to being solved. Ideally,
-    the problem is completely solved, and I can use the computer as a glorified verification scheme for an
-    "algebraic" (really playing fast and loose with that term) type of solution. To me, this would look like
-    code without branches. Of course, we use if;else branching often because it makes the code more legible, not
-    for performance reasons, and keeping this in mind is good because it forces you to try and create solutions which
-    are both branchless *and* legible, which would ideally correspond with more robust solutions.
+Obviously, "telling the computer what you want to solve and letting it solve the problem for you"
+is something which you could always *argue* is the case. Nevertheless, it feels to me as though
+to have any satisfaction in "solving" a problem requires some level of (at minimum) algebra (in the 
+most general sense) wherein I, the human, should be breaking down the problem somewhat on my own, the idea
+being that a computer can solve problems faster if you give it problems which are closer to being solved. Ideally,
+the problem is completely solved, and I can use the computer as a glorified verification scheme for an
+"algebraic" (really playing fast and loose with that term) type of solution. To me, this would look like
+code without branches. Of course, we use if;else branching often because it makes the code more legible, not
+for performance reasons, and keeping this in mind is good because it forces you to try and create solutions which
+are both branchless *and* legible, which would ideally correspond with more robust solutions.
 
 As such, in an effort to optimize for execution time, the primary thing I've actually *done* is break down how
 the problem is approached. For starters: the spelling bee, as the name implies, is an english-language definition-agnostic
