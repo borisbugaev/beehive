@@ -23,10 +23,7 @@ code without branches. Of course, we use if;else branching often because it make
 for performance reasons, and keeping this in mind is good because it forces you to try and create solutions which
 are both branchless *and* legible, which would ideally correspond with more robust solutions.
 
-As such, in an effort to optimize for execution time, the primary thing I've actually *done* is break down how
-the problem is approached. For starters: the spelling bee, as the name implies, is an english-language definition-agnostic
-spelling problem. We can define the starting point of an analagous problem to it as a set of 7 alphabetic characters, or,
-somewhat crudely, 
+As such, in an effort to optimize for execution time, the primary thing I've actually *done* is break down how the problem is approached. For starters: the spelling bee, as the name implies, is an english-language definition-agnostic spelling problem. We can define the starting point of an analagous problem to it as a set of 7 alphabetic characters, or, somewhat crudely, 
 
 S ⊂ {alphabet} where |S| = 7 
 
