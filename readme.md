@@ -6,8 +6,11 @@ An attempt to generate a solution for NYT Spelling Bee type problems with minima
 Currently completes in ~30ms with default compiler optimizations (-O0) reading an ~8000 entry dictionary
 
 Why ...
+
 ... c++? I am not good at it but I would like to be.
+
 ... do I continue to let the knicks do this to me? Unclear. (5/31/2025 but likely this sentiment shall recur)
+
 ... bother?
     Obviously, "telling the computer what you want to solve and letting it solve the problem for you"
     is something which you could always *argue* is the case. Nevertheless, it feels to me as though
@@ -20,7 +23,7 @@ Why ...
     for performance reasons, and keeping this in mind is good because it forces you to try and create solutions which
     are both branchless *and* legible, which would ideally correspond with more robust solutions.
 
-    As such, in an effort to optimize for execution time, the primary thing I've actually *done* is break down how
+As such, in an effort to optimize for execution time, the primary thing I've actually *done* is break down how
 the problem is approached. For starters: the spelling bee, as the name implies, is an english-language definition-agnostic
 spelling problem. We can define the starting point of an analagous problem to it as a set of 7 alphabetic characters, or,
 somewhat crudely, 
