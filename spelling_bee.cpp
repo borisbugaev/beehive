@@ -2,7 +2,6 @@
 #include <fstream>
 #include <cstdint>
 #include <string>
-#include <cstring>
 #include <chrono>
 
 /*
@@ -68,7 +67,7 @@ As str_v is a subset of the alphabet, the bitmap must >= 26 bits
 Uses ui32 type to contain the returned bitmap
 */
 
-uint32_t iter_map_str(std::string_view str_v)
+uint32_t iter_map_str(std::string str_v)
 {
 	uint32_t string_map{0};
 	for (int i = 0; i < str_v.length(); i++)
@@ -114,14 +113,13 @@ int main(int argc, char* argv[])
 	#ifdef ADV_TIMING
 	auto temp_start = std::chrono::steady_clock::now();
 	#endif
-	const std::string_view k_view{kinput};
-	const uint32_t k_map{iter_map_str(k_view)};
+	const uint32_t k_map{iter_map_str(kinput)};
 	
 	std::ifstream file("word_list.txt");
 	if (!file.is_open())
 	{
         std::cerr << "Error opening file." << std::endl;
-        std::cerr << strerror(errno) << std::endl;
+        std::cerr << errno << std::endl;
 	}
 	std::ofstream out_file("valid_words.txt");
 	std::string line{};
@@ -131,10 +129,9 @@ int main(int argc, char* argv[])
 	#endif
 	while (std::getline(file, line))
 	{
-		std::string_view candidate{line};
-		if (map_compare(k_map, iter_map_str(candidate)) && candidate.length() > 3)
+		if (map_compare(k_map, iter_map_str(line)) && line.length() > 3)
 		{
-			out_file << candidate << "\n";
+			out_file << line << "\n";
 		}
 		#ifdef ADV_TIMING
 		auto call_complete = std::chrono::steady_clock::now();
