@@ -17,7 +17,6 @@ TODO:
 */
 
 const uint32_t ASC_OFST{96};
-const uint32_t TO_LCASE{32};
 const uint32_t MAP_OFST{26};
 const uint32_t ONE_BIT{1};
 
@@ -28,7 +27,7 @@ and the map schema is 26-bit, which leaves 6 bits for additional information
  */
 uint32_t map_key_char(char kc, uint32_t str_map)
 {
-	const uint32_t init_key_map{MAP_OFST - (uint32_t(kc) - ASC_OFST) + ONE_BIT};
+	const uint32_t init_key_map{MAP_OFST - (uint32_t(kc) - 'a')};
 	const uint32_t shift_key_map{init_key_map << MAP_OFST};
 	return shift_key_map | str_map;
 }
@@ -49,14 +48,14 @@ Each unique value l returns bitmap as ui32
 */
 uint32_t map_char(char wc)
 {
-	if (uint8_t(wc) <= (ASC_OFST + MAP_OFST) && uint8_t(wc) >= (ASC_OFST + ONE_BIT)) 
+	if (wc <= 'z' && wc >= 'a') 
 	{
 		return map_gen(wc);
 	}
-	else if (uint8_t(wc) >= uint8_t('A') && uint8_t(wc) <= uint8_t('Z'))
+	else if (wc >= 'A' && wc <= 'Z')
 	{
-		char kc{char(uint32_t(wc) + TO_LCASE)};
-		return map_key_char(kc, map_gen(kc));
+		auto kui{wc + ' '};
+		return map_key_char((char)kui, map_gen((char)kui));
 	}
 	else
 	{
