@@ -10,7 +10,7 @@ There exists some issue that prevents execution in vscode
 However, everything seems to work outside the ide
 Current runtime ~30ms (-O0) ~20ms(-O1) ~15ms(-O2)
 TODO:
---fix vscode exec
+--fix vscode exec (never going to happen lol)
 --make it faster overall
 */
 
