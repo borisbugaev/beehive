@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <cstdint>
@@ -8,10 +9,10 @@
 Program to solve "NYT Spelling Bee" word puzzle relatively fast
 There exists some issue that prevents execution in vscode
 However, everything seems to work outside the ide
-Current runtime ~30ms (-O0) ~20ms(-O1) ~15ms(-O2)
+runtime ~30ms (-O0) ~20ms(-O1) ~15ms(-O2)
 TODO:
 --fix vscode exec (never going to happen lol)
---make it faster overall
+--retool function definitions to move conditionals closer to the surface
 */
 
 const uint32_t ASC_OFST{96};
@@ -67,12 +68,32 @@ As str_v is a subset of the alphabet, the bitmap must >= 26 bits
 Uses ui32 type to contain the returned bitmap
 */
 
-uint32_t iter_map_str(std::string str_v)
+uint32_t iter_map_str_K(std::string str_v)
 {
 	uint32_t string_map{0};
 	for (int i = 0; i < str_v.length(); i++)
 	{
 		string_map = string_map | map_char(str_v[i]);
+	}
+	return string_map;
+}
+
+uint32_t iter_map_str_v2(std::string str_v)
+{
+	uint32_t string_map{0};
+	for (int i = 0; i < str_v.length(); i++)
+	{
+		string_map = string_map | map_gen(str_v[i]);
+	}
+	return string_map;
+}
+
+uint32_t iter_map_str_v3(const char* c_v, const int l)
+{
+	uint32_t string_map{0};
+	for (int i = 0; i < l; i++)
+	{
+		string_map = string_map | map_char(c_v[i]);
 	}
 	return string_map;
 }
@@ -96,6 +117,15 @@ uint32_t map_compare(uint32_t key_map, uint32_t candidate_map)
 	return (candidate_map * has_key * is_submap) / candidate_map;
 }
 
+uint32_t map_compare_v2(uint32_t key_map, uint32_t candidate_map)
+{
+	const uint32_t key_index{key_map >> MAP_OFST};
+	const uint32_t candidate_shift{candidate_map >> (key_index - 1)};
+	const uint32_t has_key{candidate_shift & ONE_BIT};
+	const uint32_t map_union{key_map | candidate_map};
+	return (has_key) & (map_union == key_map);
+}
+
 int main(int argc, char* argv[]) 
 {
 	std::string kinput{};
@@ -108,12 +138,14 @@ int main(int argc, char* argv[])
 		std::cout << "Enter Parameters: ";
 		std::cin >> kinput;
 	}
+	const char* kch{kinput.c_str()};
+	const int kch_l{(int)kinput.length()};
 
 	auto start = std::chrono::steady_clock::now();
 	#ifdef ADV_TIMING
 	auto temp_start = std::chrono::steady_clock::now();
 	#endif
-	const uint32_t k_map{iter_map_str(kinput)};
+	const uint32_t k_alt{iter_map_str_v3(kch, kch_l)};
 	
 	std::ifstream file("word_list.txt");
 	if (!file.is_open())
@@ -129,7 +161,7 @@ int main(int argc, char* argv[])
 	#endif
 	while (std::getline(file, line))
 	{
-		if (map_compare(k_map, iter_map_str(line)) && line.length() > 3)
+		if (map_compare_v2(k_alt, iter_map_str_v2(line)) && line.length() > 3)
 		{
 			out_file << line << "\n";
 		}
