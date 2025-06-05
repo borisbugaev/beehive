@@ -14,6 +14,7 @@ w/ dictionary preprocessing
 TODO:
 --fix vscode exec (never going to happen lol)
 --go faster go faster go faster
+--This is a strong candidate for threads... threaded implementation?
 */
 
 const uint32_t ASC_OFST{96};
@@ -99,6 +100,16 @@ uint32_t iter_map_str_v3(const char* c_v, const int l)
 	return string_map;
 }
 
+uint32_t iter_map_str_v4(const char* c_v, const int l)
+{
+	uint32_t string_map{0};
+	for (int i = 0; i < l; i++)
+	{
+		string_map = string_map | map_gen(c_v[i]);
+	}
+	return string_map;
+}
+
 /*
 Per NYT Bee rules:
 Let c_set represent the set of letters used to spell a candidate word
@@ -162,7 +173,9 @@ int main(int argc, char* argv[])
 	#endif
 	while (std::getline(file, line))
 	{
-		if (map_compare_v2(k_alt, iter_map_str_v2(line)) && line.length() > 3)
+		const char* lch{line.c_str()};
+		const int lch_l{(int)line.length()};
+		if (map_compare_v2(k_alt, iter_map_str_v4(lch, lch_l)) && lch_l > 3)
 		{
 			out_file << line << "\n";
 		}
