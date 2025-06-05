@@ -9,6 +9,8 @@ Program to solve "NYT Spelling Bee" word puzzle relatively fast
 There exists some issue that prevents execution in vscode
 However, everything seems to work outside the ide
 runtime ~30ms (-O0) ~20ms(-O1) ~15ms(-O2)
+w/ dictionary preprocessing
+13ms // 8ms // 7ms
 TODO:
 --fix vscode exec (never going to happen lol)
 --retool function definitions to move conditionals closer to the surface
@@ -146,7 +148,7 @@ int main(int argc, char* argv[])
 	#endif
 	const uint32_t k_alt{iter_map_str_v3(kch, kch_l)};
 	
-	std::ifstream file("word_list.txt");
+	std::ifstream file("dictionary_preprocessed.txt");
 	if (!file.is_open())
 	{
 		std::cerr << "Error opening file." << std::endl;
