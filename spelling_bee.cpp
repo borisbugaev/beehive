@@ -149,8 +149,8 @@ int main(int argc, char* argv[])
 	std::ifstream file("word_list.txt");
 	if (!file.is_open())
 	{
-        std::cerr << "Error opening file." << std::endl;
-        std::cerr << errno << std::endl;
+		std::cerr << "Error opening file." << std::endl;
+		std::cerr << errno << std::endl;
 	}
 	std::ofstream out_file("valid_words.txt");
 	std::string line{};

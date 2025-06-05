@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-spelling_bee",
+      "appliesTo": "spelling_bee.cpp",
+      "type": "launch"
+    }
+  ]
+}
