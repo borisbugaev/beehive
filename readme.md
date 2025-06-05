@@ -3,7 +3,17 @@ NYT Spelling Bee Solver in C++
 
 verbeux:
 An attempt to generate a solution for NYT Spelling Bee type problems with minimal execution time.
-Currently completes in ~30ms with default compiler optimizations (-O0) reading an ~8000 entry dictionary
+Currently completes in ~30ms with default compiler optimizations (-O0) reading a 4mb dictionary
+
+Updates as of 4 june 2025::
+
+Optimized functions to simplify math; differences can be seen in "v2" functions.
+
+Preprocessed dictionary to remove all words which contain more than 7 unique characters, as these are invalid for all possible spelling bee games.
+
+Might edit in the future to allow either option, greater flexibility in general.
+
+Original rant::
 
 Why ...
 

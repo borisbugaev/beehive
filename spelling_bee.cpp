@@ -13,7 +13,7 @@ w/ dictionary preprocessing
 13ms // 8ms // 7ms
 TODO:
 --fix vscode exec (never going to happen lol)
---retool function definitions to move conditionals closer to the surface
+--go faster go faster go faster
 */
 
 const uint32_t ASC_OFST{96};
