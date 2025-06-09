@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstdint>
 #include <string>
 #include <chrono>
 
@@ -17,19 +16,19 @@ TODO:
 --This is a strong candidate for threads... threaded implementation?
 */
 
-const uint32_t ASC_OFST{96};
-const uint32_t MAP_OFST{26};
-const uint32_t ONE_BIT{1};
+const unsigned long ASC_OFST{96};
+const unsigned long MAP_OFST{26};
+const unsigned long ONE_BIT{1};
 
 /* 
 add a 5-bit key character identifier at the head of ui32
 as 5 bits is adequate for a unique identifier 1=<i=<26
 and the map schema is 26-bit, which leaves 6 bits for additional information
  */
-uint32_t map_key_char(char kc, uint32_t str_map)
+unsigned long map_key_char(char kc, unsigned long str_map)
 {
-	const uint32_t init_key_map{MAP_OFST - (uint32_t(kc) - 'a')};
-	const uint32_t shift_key_map{init_key_map << MAP_OFST};
+	const unsigned long init_key_map{MAP_OFST - ((unsigned long)(kc) - 'a')};
+	const unsigned long shift_key_map{init_key_map << MAP_OFST};
 	return shift_key_map | str_map;
 }
 
@@ -37,9 +36,9 @@ uint32_t map_key_char(char kc, uint32_t str_map)
 Accomplishes mapping for map_char (below)
 Not super safe (does not verify valid input)
 */
-uint32_t map_gen(char mc)
+unsigned long map_gen(char mc)
 {
-	return (ONE_BIT << (MAP_OFST - (uint32_t(mc) - ASC_OFST)));
+	return (ONE_BIT << (MAP_OFST - ((unsigned long)(mc) - ASC_OFST)));
 }
 
 /*
@@ -47,7 +46,7 @@ Let each lowercase ascii letter be l where a=<l=<z
 Protects input integrity so that map generation only happens with valid char
 Each unique value l returns bitmap as ui32
 */
-uint32_t map_char(char wc)
+unsigned long map_char(char wc)
 {
 	if (wc <= 'z' && wc >= 'a') 
 	{
@@ -70,9 +69,9 @@ As str_v is a subset of the alphabet, the bitmap must >= 26 bits
 Uses ui32 type to contain the returned bitmap
 */
 
-uint32_t iter_map_str_K(std::string str_v)
+unsigned long iter_map_str_K(std::string str_v)
 {
-	uint32_t string_map{0};
+	unsigned long string_map{0};
 	for (int i = 0; i < str_v.length(); i++)
 	{
 		string_map = string_map | map_char(str_v[i]);
@@ -80,9 +79,9 @@ uint32_t iter_map_str_K(std::string str_v)
 	return string_map;
 }
 
-uint32_t iter_map_str_v2(std::string str_v)
+unsigned long iter_map_str_v2(std::string str_v)
 {
-	uint32_t string_map{0};
+	unsigned long string_map{0};
 	for (int i = 0; i < str_v.length(); i++)
 	{
 		string_map = string_map | map_gen(str_v[i]);
@@ -90,9 +89,9 @@ uint32_t iter_map_str_v2(std::string str_v)
 	return string_map;
 }
 
-uint32_t iter_map_str_v3(const char* c_v, const int l)
+unsigned long iter_map_str_v3(const char* c_v, const int l)
 {
-	uint32_t string_map{0};
+	unsigned long string_map{0};
 	for (int i = 0; i < l; i++)
 	{
 		string_map = string_map | map_char(c_v[i]);
@@ -100,9 +99,9 @@ uint32_t iter_map_str_v3(const char* c_v, const int l)
 	return string_map;
 }
 
-uint32_t iter_map_str_v4(const char* c_v, const int l)
+unsigned long iter_map_str_v4(const char* c_v, const int l)
 {
-	uint32_t string_map{0};
+	unsigned long string_map{0};
 	for (int i = 0; i < l; i++)
 	{
 		string_map = string_map | map_gen(c_v[i]);
@@ -120,21 +119,21 @@ And c_set must contain key
 Function returns 1 if conditions met
 Else returns 0
 */
-uint32_t map_compare(uint32_t key_map, uint32_t candidate_map)
+unsigned long map_compare(unsigned long key_map, unsigned long candidate_map)
 {
-	const uint32_t key_index{key_map >> MAP_OFST}; //this is "destructive" but it doesn't matter
-	const uint32_t key_reference{(ONE_BIT << (key_index - ONE_BIT))};
-	const uint32_t has_key{(candidate_map & key_reference) / key_reference}; //effectively bool
-	const uint32_t is_submap{key_map / (key_map | candidate_map)};
+	const unsigned long key_index{key_map >> MAP_OFST}; //this is "destructive" but it doesn't matter
+	const unsigned long key_reference{(ONE_BIT << (key_index - ONE_BIT))};
+	const unsigned long has_key{(candidate_map & key_reference) / key_reference}; //effectively bool
+	const unsigned long is_submap{key_map / (key_map | candidate_map)};
 	return (candidate_map * has_key * is_submap) / candidate_map;
 }
 
-uint32_t map_compare_v2(uint32_t key_map, uint32_t candidate_map)
+unsigned long map_compare_v2(unsigned long key_map, unsigned long candidate_map)
 {
-	const uint32_t key_index{key_map >> MAP_OFST};
-	const uint32_t candidate_shift{candidate_map >> (key_index - 1)};
-	const uint32_t has_key{candidate_shift & ONE_BIT};
-	const uint32_t map_union{key_map | candidate_map};
+	const unsigned long key_index{key_map >> MAP_OFST};
+	const unsigned long candidate_shift{candidate_map >> (key_index - 1)};
+	const unsigned long has_key{candidate_shift & ONE_BIT};
+	const unsigned long map_union{key_map | candidate_map};
 	return (has_key) & (map_union == key_map);
 }
 
@@ -157,7 +156,7 @@ int main(int argc, char* argv[])
 	#ifdef ADV_TIMING
 	auto temp_start = std::chrono::steady_clock::now();
 	#endif
-	const uint32_t k_alt{iter_map_str_v3(kch, kch_l)};
+	const unsigned long k_alt{iter_map_str_v3(kch, kch_l)};
 	
 	std::ifstream file("dictionary_preprocessed.txt");
 	if (!file.is_open())
