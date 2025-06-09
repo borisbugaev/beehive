@@ -5,15 +5,12 @@
 
 /*
 Program to solve "NYT Spelling Bee" word puzzle relatively fast
-There exists some issue that prevents execution in vscode
-However, everything seems to work outside the ide
 runtime ~30ms (-O0) ~20ms(-O1) ~15ms(-O2)
 w/ dictionary preprocessing
-13ms // 8ms // 7ms
+13ms // 6ms // 5ms
 TODO:
---fix vscode exec (never going to happen lol)
---go faster go faster go faster
---This is a strong candidate for threads... threaded implementation?
+--go faster
+--threads... ?
 */
 
 const unsigned long ASC_OFST{96};
